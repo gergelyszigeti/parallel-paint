@@ -7,9 +7,9 @@ np = iio.np
 # a kind of film for recording gif videos
 recorded_images = []
 
-def load_island_image():
-    image = iio.imread('pictures/color_islands.png')
-    image = image[...,:3] # we don't need the alpha channel 
+def load_island_image(file_name = 'pictures/color_islands.png'):
+    image = iio.imread(file_name)
+    if image.shape[2] == 4: image = image[...,:3] # we don't need the alpha channel
     return image
 
 # helper consts for readability
@@ -19,7 +19,7 @@ black_colorcode = 0
 def make_black_islands_from_color_ones( image ):
     image_black_islands = image.copy()
     # trick: the very first pixel on the top left corner is surely water
-    # set all pixels black (0,0,0) that is not water pixel 
+    # set all pixels black (0,0,0) that is not water pixel
     image_black_islands[(image != image[0,0]).all(-1)] = black_colorvector
     return image_black_islands
 
@@ -59,9 +59,9 @@ def convert_image_to_colormap_slow( image, colorvectors ):
 def convert_image_to_colormap( image, colorvectors):
     "convert image RGB vectors to simple integer numbers according to given color vectors"
     # trick: we can make 'hashes', or at least unique numbers for each pixel simultaneously
-    # using functions like sum() or prod() on the last axis (axis = -1 or simply -1) 
+    # using functions like sum() or prod() on the last axis (axis = -1 or simply -1)
     pixel_hashlist = (image.sum(-1) + image.prod(-1)).ravel()
-    
+
     # we also make the same hashes for the colors in our color table
     colorvector_hashlist = colorvectors.sum(-1) + colorvectors.prod(-1)
     # then we can give each hash a number between 0 and the number of colors (hashes)
@@ -69,7 +69,7 @@ def convert_image_to_colormap( image, colorvectors):
     colorvector_hashmap = {}
     for i, colorvector_hash in enumerate(colorvector_hashlist):
         colorvector_hashmap[colorvector_hash] = i
-    
+
     # now we can replace each pixel hash on the image to simple ordinal numbers
     image_colormap = [ colorvector_hashmap[pixel_hash] for pixel_hash in pixel_hashlist]
     return np.array(image_colormap).reshape(image.shape[0],image.shape[1]).astype(np.uint8)
@@ -79,9 +79,9 @@ def convert_colormap_to_image( image_colormap, colorvectors ):
     # the other way around is much simpler
     return colorvectors[image_colormap]
 
-# helper for parallel painting 
+# helper for parallel painting
 def convert_increasing_map_to_colormap( image_increasing_map, colorvectors ):
-    
+
     image_colormap = np.copy( image_increasing_map )
     island_color_count = len(colorvectors) - 2
     huge_number = image_increasing_map.size
@@ -107,4 +107,3 @@ def save_gif(filename, images = recorded_images, fps = 50):
     print(f'Saving {filename}, it can take a while')
     imageio.mimwrite(filename, images, fps = fps, format = '.gif')
     print('Done')
-
