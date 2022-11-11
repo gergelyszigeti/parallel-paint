@@ -20,7 +20,7 @@ def make_black_islands_from_color_ones( image ):
     image_black_islands = image.copy()
     # trick: the very first pixel on the top left corner is surely water
     # set all pixels black (0,0,0) that is not water pixel
-    image_black_islands[(image != image[0,0]).all(-1)] = black_colorvector
+    image_black_islands[(image != image[0,0]).any(-1)] = black_colorvector
     return image_black_islands
 
 def get_rgb_colorvectors_from_image( image ):
