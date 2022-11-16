@@ -22,13 +22,13 @@ def paint( image_colormap, x, y, colorcode, colorvectors ):
         p_count += 1
         # as we painted a pixel, let's render it as frame to see the process on video (gif)
         utils.render_gif_frame( image_colormap, colorvectors )
-        paint(image_colormap, x - 1, y - 1, colorcode, colorvectors)
         paint(image_colormap, x    , y - 1, colorcode, colorvectors)
-        paint(image_colormap, x + 1, y - 1, colorcode, colorvectors)
+        paint(image_colormap, x    , y + 1, colorcode, colorvectors)
         paint(image_colormap, x - 1, y    , colorcode, colorvectors)
         paint(image_colormap, x + 1, y    , colorcode, colorvectors)
+        paint(image_colormap, x - 1, y - 1, colorcode, colorvectors)
+        paint(image_colormap, x + 1, y - 1, colorcode, colorvectors)
         paint(image_colormap, x - 1, y + 1, colorcode, colorvectors)
-        paint(image_colormap, x    , y + 1, colorcode, colorvectors)
         paint(image_colormap, x + 1, y + 1, colorcode, colorvectors)
     # note: we return immediately on paint attempt of water or an already painted island pixel
     print(f'\rreturn from recursion level: {recursion_level} ', end = '')
