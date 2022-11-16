@@ -40,7 +40,7 @@ level = 1
 p_count = 0
 
 import sys
-sys.setrecursionlimit(8000)
+sys.setrecursionlimit(4000)
 
 algorithms.paint( im_black_islands_colormap_urc, 124-95, 78, colorcode_dict['red violet'], colorvectors )
 print('\nNumber of points:', p_count)
