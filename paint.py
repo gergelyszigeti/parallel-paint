@@ -34,25 +34,23 @@ im_black_islands_colormap = utils.convert_image_to_colormap(im_black_islands, co
 # and it is easier to zoom out two islands, making the process more visible
 
 im_black_islands_colormap_urc = im_black_islands_colormap[:165,95:248]
-
 '''
 level = 1
-p_count = 0
 
 import sys
 sys.setrecursionlimit(4000)
 
 algorithms.paint( im_black_islands_colormap_urc, 124-95, 78, colorcode_dict['red violet'], colorvectors )
-print('\nNumber of points:', p_count)
+print('\nNumber of points:', algorithms.p_count)
 utils.save_gif('island_paint_1st_of_2.gif.firstsep.gif')
 
 # paint the second one, record, save
 
-p_count = 0
+algorithms.p_count = 0
 utils.reset_gif_frames()
 
 algorithms.paint( im_black_islands_colormap_urc, 100, 100, colorcode_dict['yellow'], colorvectors )
-print('\nNumber of points:', p_count)
+print('\nNumber of points:', algorithms.p_count)
 utils.save_gif('island_paint_2nd_of_2.gif.firstsep.gif')
 '''
 im_black_islands_colormap_all = utils.np.copy(im_black_islands_colormap)
