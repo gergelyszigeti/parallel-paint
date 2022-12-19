@@ -56,6 +56,7 @@ def convert_image_to_colormap_slow( image, colorvectors ):
         image_colormap.append(u[c == 3])
     return np.array(image_colormap).reshape(image.shape[0],image.shape[1])
 
+#note: currently only used with black islands, for which a simpler function could have been used
 def convert_image_to_colormap( image, colorvectors):
     "convert image RGB vectors to simple integer numbers according to given color vectors"
     # trick: we can make 'hashes', or at least unique numbers for each pixel simultaneously
