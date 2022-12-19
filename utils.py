@@ -107,3 +107,38 @@ def save_gif(filename, images = recorded_images, fps = 50):
     print(f'Saving {filename}, it can take a while')
     imageio.mimwrite(filename, images, fps = fps, format = '.gif')
     print('Done')
+
+def video_to_gif(video_filename, gif_filename, speedup = 4, gif_fps = 25):
+    " converts an .mp4 or .mov video into .gif "
+    metadata = iio.immeta(video_filename, exclude_applied=False)
+    duration = metadata['duration']
+    fps = metadata['fps']
+    frame_count = int(duration * fps)
+    print(f'Loading video file {video_filename}')
+    print(f'duration is {duration}, fps is {fps}, number of frames is {frame_count}')
+    print(f'selected video speedup for gif: {speedup}'
+          f'{" (default)" if speedup == 4 else ""}')
+    print(f'Processing {frame_count//speedup+1} frames, can take a while')
+    try: from tqdm import tqdm
+    except ImportError:
+        print('(if you need a progress bar here, use pip install tqdm before next run)')
+        # TODO: def for printing "processed i/n" style progress instead of empty lambda
+        tqdm = lambda x : x
+    # we read individual frames according to speedup
+    frames = [iio.imread(video_filename, index = i) for i in tqdm(range(0, frame_count, speedup))]
+    # then save frames as gif
+    # TODO: possibly use save_gif, even with variable hold last frame time
+    print(f'Saving gif file {gif_filename}, it can take a while')
+    imageio.mimwrite(gif_filename, frames, fps = gif_fps, format = '.gif')
+
+def viewable_gif_palette(filename, height, width):
+    " just a toy function, makes a bitmap of the colors being used in a gif file "
+    metadata = iio.immeta(filename, exclude_applied=False)
+    palette = metadata['palette']
+    pcolors = palette.colors
+    color_count = len(pcolors)
+    img = np.array(list(pcolors.keys())).repeat(width//color_count, 0)[None, ...].repeat(height, 0)
+    return img
+
+# test for video_to_gif()
+# video_to_gif('IMG_8191.MOV', 'test4x.gif')
