@@ -68,12 +68,12 @@ def paint(image, x, y, color):
     return
 ```
 > **_Note:_**
->- ```image``` is a 2D numpy array of color code numbers, the image of islands
->- ```color``` is a color code number between 0 and 11, 0 means black, 1 is the sea color, numbers between 2 and 11 represent island colors
->- ```black_color``` is 0
->- as usual, x is the horizontal axis, y is the vertical
->- indexing a 2D numpy array is a bit tricky, y comes first, x is the second
->- numpy arrays are mutable, which means any modification of the array inside the function is also seen from outside (passed by reference in C++ terms)
+> - `image` is a 2D numpy array of color code numbers, the image of islands
+> - `color` is a color code number between 0 and 11, 0 means black, 1 is the sea color, numbers between 2 and 11 represent island colors
+> - `black_color` is 0
+> - as usual, x is the horizontal axis, y is the vertical
+> - indexing a 2D numpy array is a bit tricky, y comes first, x is the second
+> - numpy arrays are mutable, which means any modification of the array inside the function is also seen from outside (passed by reference in C++ terms)
 
 
 
