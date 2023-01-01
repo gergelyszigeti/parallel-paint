@@ -15,19 +15,19 @@ I'm also planning a follow up article which would be about the CUDA algorithm it
 Before the parallel algorithm, I will show a traditional painting algorithm, working on a single processor core.
 
 ### Color islands
-<img align=\"Right\" src=\"./pictures/color_islands.png\" alt='colorful islands in a light blue sea' width = "40%" style = \"padding-left: 16px\">
+<img align="Right" src="./pictures/color_islands.png" alt="colorful islands in a light blue sea" width = "40%" style = "padding-left: 16px">
 
 
 The image on the right hopefully looks like some fancy colored islands in a calm sea, at least that was the goal when I tried to use my finger-painting skills on a small smartphone touchscreen.
-I could draw black island outlines on a white screen with a simple application. The app had a paint function, which showed a tilted paint bucket filled with paint. I could move the bucket around with my finger, and also \"pour out its content\" with a button on the bottom of the screen. The application flooded all the white parts with light blue when I poured the carefully selected color for the sea outside of all island contours. Not yet knowing the colors of the islands, I moved the bucket inside all of the islands and poured black paint into all of them. This way I was also able to remove the outlines themselves as the islands turned all black.
+I could draw black island outlines on a white screen with a simple application. The app had a paint function, which showed a tilted paint bucket filled with paint. I could move the bucket around with my finger, and also "pour out its content" with a button on the bottom of the screen. The application flooded all the white parts with light blue when I poured the carefully selected color for the sea outside of all island contours. Not yet knowing the colors of the islands, I moved the bucket inside all of the islands and poured black paint into all of them. This way I was also able to remove the outlines themselves as the islands turned all black.
 
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 
-<img align=\"Left\" src=\"./pictures/black_islands.png\" width = "40%">
+<img align="Left" src="./pictures/black_islands.png" width = "40%">
 <br>
 I can not say I had a clear plan about the colors of the islands, but started to move around the bucket, set the color of its paint and tapped the 'pour out' button when the bucket was over a black area. The application relentlessly turned the black islands into color ones.
 The painting process looked instantaneous, the paint flooded an island in a blink of an eye. It is quite convenient from the user's point of view, however, let us be honest, it is not quite realistic. At least all paint or liquid I've ever seen was flowing way much slower than the speed of light (hopefully I didn't miss something and this is always the case).
-I guess you wouldn't be so surprised if I was telling that the \"paint\" in the application is also flowing in some direction or directions, flooding everything until it hits the sea, which acts as a wall. It either stops the paint in that certain direction, or more probably redirects it to other black areas, if anymore is left at all in the neighborhood.
+I guess you wouldn't be so surprised if I was telling that the "paint" in the application is also flowing in some direction or directions, flooding everything until it hits the sea, which acts as a wall. It either stops the paint in that certain direction, or more probably redirects it to other black areas, if anymore is left at all in the neighborhood.
 Sounds pretty complicated! Thankfully or sadly even small devices like smartphones are fast enough to do this complex task immediately.
 If you are courius about how this painting process works under the hood, you are just like me! If not, further reading of this article can bring up your interest.
 I don't know how the particular paint filling in the app works, not least because it paints instantly, but I have hazy memories from my childhood, when things were slower, especially computers. You could easily follow the painting process, sometimes for long tens of seconds. If I remember correctly they more looked like brush strokes. Pixels were drawn up then down between the outlines, stepping one pixel to the sides after each vertical stroke.
@@ -87,7 +87,7 @@ sys.setrecursionlimit(4000)
 
 Let's see how this recursive paint function works, I mean literally see it!
 
-<img src=\"./pictures/island_paint_1st_of_2.gif\" alt='black island is being painted' width = "40%">
+<img src="./pictures/island_paint_1st_of_2.gif" alt='black island is being painted' width = "40%">
 
 The first thing that really stands out is that this process really looks like what I was talking about, recalling my memories. Not always, but most of the time the pixels go up and down, mimicking up and down brush strokes, even if there is no explicit code to do so in the function. If this doesn't surprise you, you are already an expert in recursive functions! As I've already stated, the path of the recursion is heavily dependent on the data, on the shape of the island and on the location of the starting point. However, we can easily influence the process by the order of the function calls, that is, the order of neighbors to inspect. I've intentionally placed the investigation of the upper and lower neighbors first. Don't forget, we have only one core here, the function can cope only with one pixel at a time. Instead of taking the neighbors of a pixel one by one, the process takes the first neighbor, which is the upper one, then takes the upper neighbor's first neighbor, which is its upper neighbor (assuming those neighbors are still black). That results in the brush stroke up. If going up is not possible, the second function call kicks in, resulting in a brush stroke down. You can also see the 'restarts', they are handled automatically. These restarts can occur when many functions return from each other, because all neighbors have already been checked and they were either skipped or painted. Visually, this is when a part of the island is alredy fully painted and the brush stroke can not continue in that area.
 
@@ -97,7 +97,7 @@ Let's see what happens if the order of the calls is different. In this scenario,
 > _**fun fact:** This was my original attempt at this recursive paint function. Later I rearranged the calls as I was progressing with this article and started writing about oldschool algorithms._
 
 
-<img align=\"Right\" src=\"./pictures/island_paint_2nd_of_2.gif\" alt='black island is being painted' width = 40% style = \"padding-left: 16px\">
+<img align="Right" src="./pictures/island_paint_2nd_of_2.gif" alt='black island is being painted' width = 40% style = "padding-left: 16px">
 
 Not surprisingly, the first brush stroke goes diagonally up to the left. Then it turns to other, seemingly unpredictable directions.
 
@@ -130,7 +130,7 @@ Now you may be wondering, how to assign starting points and different colors to 
 
 Enough talk, let's see how it works! Let me use a real notebook and real pencils to explain the steps of the algorithm. For the sake of simplicity, the toy example here will be my original first example with only 6x6 pixels and one island first.
 
-<img src=\"./pictures/toyexample_small.jpeg\" alt='small pencil island with small pencil sea' width = 20%>
+<img src="./pictures/toyexample_small.jpeg" alt='small pencil island with small pencil sea' width = 20%>
 
 >_**fun fact**: I was drawing and writing a lot of numbers in a similar notebook when I came up with this algorithm. The one island example here will be exactly the same as the one I came up with years ago. It happened after many tries and even with this example it took me a while to get the algorithm right._
 
