@@ -119,6 +119,7 @@ That may sound like a recipe for trouble, and it certainly can be if we are not 
 $$ O(n^2) $$
 $$ O(log_2(n)) $$
 $$ \\mathcal{O}(log_2n) $$
+&#119978; $$ (log_2n) $$
 
 ### The parallel painting algorithm
 
@@ -128,7 +129,14 @@ The original CUDA algorithm is a short chain of certain steps, these steps are e
 
 Now you may be wondering, how to assign starting points and different colors to the islands, if we paint them all at once. With this algorithm, no starting points need to be assigned at all, and colors do not need to be assigned before the painting process. The algorithm fills the islands with arbitrary numbers. These numbers will be the same on one island, but completely different from the numbers on the other islands.
 
-Enough talk, let's see how it works! Let me use a real notebook and real pencils to explain the steps of the algorithm. For the sake of simplicity, the toy example here will be my original first example with only 6x6 pixels and one island first.
+Enough talk, let's see how it looks like!
+
+<img src="pictures/island_paint_parallel.gif" alt="salt and pepper colorful islands turn to plain color ones in a few steps, as colorful salt and pepper grow bigger and bigger" width = "40%">
+
+As you see, the result island colors are not the same as the ones on the original image, moreover, some of the islands have the exact same color at the end. It is because the numbers are arbitrary which fill each island, their value can be anything between 1 and the number of all the pixels of the picture (280x372 = 104160). I have just a few colors to represent these numbers, so I used a simple modulo operation, 10 colors are repeated in this 104160 long interval. This is the reason of the same color islands, but I can assure you, their pixel values are different. After this few steps iteration, the result island values can be easily mapped to our color codes to "paint" them to their original colors. You see it right, now I put the word paint in quote marks, as it is more like a simple value substitution operation now. We need to do it for a bunch of pixels, but we can do it at once in one step. On GPU, all pixels can be substituted at once, in Python it will be one simple command for each island. If colors are irrelevant for any reason, this last step can be omitted or all the island values can be gathered and mapped to different color codes automatically. If colors matter as in our example, we can simply use the method I showed in the single core method, giving an x, y, and color value for each island manually.
+
+
+Now let's see how this iteration with parallel steps works in details! Let me use a real notebook and real pencils to explain the steps of the algorithm. For the sake of simplicity, the toy example here will be my original first example with only 6x6 pixels and one island first.
 
 <img src="./pictures/toyexample_small.jpeg" alt="small pencil island with small pencil sea" width = "20%">
 
